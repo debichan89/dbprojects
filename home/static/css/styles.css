@@ -1,0 +1,375 @@
+/*Fonts*/
+@font-face {
+  font-family: 'Bonzai';
+  src: url(../fonts/bonzai.ttf);
+}
+@font-face {
+  font-family: 'Pixel';
+  src: url(../fonts/Pixel.ttf);
+}
+* {
+  margin: 0;
+  padding: 0;
+  font-weight: normal;
+}
+a {
+  text-decoration: none;
+  color: inherit;
+}
+a:hover {
+  text-decoration: none;
+}
+ul {
+  list-style: none;
+}
+body {
+  width: 100%;
+  background: url('../images/old_map.png');
+
+}
+.clear {
+  clear: both;
+}
+/*HEADER*/
+.header {
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  background: url('../images/circles-light.png');
+  box-shadow: 0 4px 6px #666;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+.header a {
+  display: block;
+  padding: 0.5em;
+  font-size: 40px;
+  color: #FD5F00;
+  text-align: center;
+}
+.header a h2, h3 {
+  display: inline-block;
+}
+.header a h2 {
+  font-size: 4rem;
+}
+#bonzai {
+  font-family: 'Bonzai';
+}
+#pixel {
+  font-family: 'Pixel';
+}
+/*Home page*/
+.mainPage {
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 2em;
+  background-color: white;
+}
+.projectsHeader {
+  background-color: #FD5F00;
+  text-align: center;
+}
+.projectsHeader h3 {
+  padding: 0.5em;
+  color: ghostwhite;
+
+}
+.projectsList {
+  text-align: center;
+  background: url('../images/circles-light.png');
+  box-shadow: 0 3px 6px #666;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+.projectsList img {
+  width: 100px;
+}
+.row {
+  width: 100%;
+  padding: 2em 0;
+  margin-left: 0;
+  margin-right: 0;
+}
+/*S3 Page*/
+.s3Wrapper {
+  padding: 2em 1em;
+  background: url('../images/circles-light.png');
+  box-shadow: 0 4px 6px #666;
+  border-radius: 10px;
+}
+.descriptionBar {
+  border-bottom: 1px solid black;
+}
+.descriptionBar div {
+  display: inline-block;
+}
+.descriptionBar #left {
+  width: 35%;
+}
+.descriptionBar #right {
+  width: 62%;
+  text-align: right;
+}
+.descriptionBar #right  #descExtra {
+  width: 100%;
+}
+.descriptionBar #descExtra li {
+  display: inline-block;
+  margin: 0 2em;
+}
+.descriptionBar #descExtra li:last-child {
+  margin-right: 0;
+}
+.s3Items {
+  margin: 1em 0 3em 0;
+}
+.s3Name div {
+  display: inline-block;
+  margin: 0.7em 0;
+}
+.s3Name #left {
+  width: 35%;
+}
+.s3Name #right {
+  width: 62%;
+  text-align: right;
+}
+.s3Name #s3ItemDesc li {
+  display: inline-block;
+  margin: 0 1.5em;
+}
+.s3Name #s3ItemDesc li:last-child {
+  margin-right: 0;
+}
+/*Buttons*/
+.button {
+  padding: 0.2em 0.6em;
+  border-style: none;
+  border: 1px solid black;
+}
+.delete {
+  background-color: red;
+  color: white;
+}
+.create {
+  background-color: green;
+  color: white;
+}
+/*Bucket Page*/
+.objectWrapper {
+  background: url('../images/circles-light.png');
+  border-radius: 10px;
+  box-shadow: 0 4px 6px #666;
+  padding: 1em 0.6em;
+}
+.bucketCreateOptions {
+  margin: 1em;
+}
+.bucketFileList {
+  margin: 1em 0 1em 1.5em;
+  width: 95%;
+  padding: 0;
+  border-bottom: 1px solid black;
+}
+.bucketFileList #inline-block {
+  width: 100%;
+}
+#inline-block li {
+  margin: 0;
+  display: inline-block;
+}
+#inline-block #name {
+  width: 55%;
+  float: left;
+}
+#inline-block #rest {
+  width: 40%;
+  float: left;
+  text-align: right;
+}
+#inline-block #rest li {
+  width: 32%;
+}
+.objectsList {
+  margin: 0 0.4em;
+}
+.objectsList ul li {
+  margin: 0.5em 0;
+}
+.objectsList ul li:hover .styled-checkbox {
+  visibility: visible;
+}
+.objectsList ul #menuIcon {
+  background: url('../images/menu_icon.svg');
+  background-repeat: no-repeat;
+  height: 35px;
+  background-position: right;
+  vertical-align: middle;
+  cursor: pointer;
+  position: relative;
+  display: inline-block;
+}
+#menuIcon .dropdownMenu {
+  display: none;
+  position: absolute;
+  z-index: 1;
+  overflow: auto;
+  width: 100%;
+  background-color: #f9f9f9;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  margin-top: 2em;
+  margin-left: 10%;
+}
+#menuIcon .dropdownMenu li {
+  display: block;
+  color: black;
+  padding: 0.5em 1em;
+  margin: 0;
+}
+#menuIcon .dropdownMenu li:hover {
+  background: #ddd;
+}
+.styled-checkbox {
+  float: left;
+  margin-top: 3px;
+  visibility: hidden;
+}
+.objectsList .fileName {
+  float: left;
+  width: 55%;
+  margin-left: 0.3em;
+}
+.objectsList #rest {
+  width: 37%;
+  float: left;
+  text-align: right;
+}
+.objectsList #rest ul #topLevel, #menuIcon{
+  display: inline-block;
+  width: 31%;
+  margin: 0;
+}
+#uploadFile {
+  display: none;
+}
+#uploadButton {
+  display: none;
+}
+.progress {
+  visibility: hidden;
+}
+/*Gacha page*/
+.gachaHeader {
+  text-align: center;
+  background-image: -ms-linear-gradient(top, #FD5F00 0%, #983900 90%);
+  background-image: -moz-linear-gradient(top, #FD5F00 0%, #983900 90%);
+  background-image: -o-linear-gradient(top, #FD5F00 0%, #983900 90%);
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #FD5F00), color-stop(90, #983900));
+  background-image: -webkit-linear-gradient(top, #FD5F00 0%, #983900 90%);
+  background-image: linear-gradient(to bottom, #FD5F00 0%, #983900 90%);
+}
+.gachaHeader h3 {
+  color: ghostwhite;
+
+}
+.explanation {
+  background: url('../images/circles-light.png');
+  margin: 0;
+  padding: 1em 0.4em;
+  padding-left: 0.7em;
+}
+.explanation .description {
+  display: none;
+}
+.explanation #clickable {
+  cursor: pointer;
+}
+.explanation #explanation {
+  list-style: circle;
+  margin-left: 1.5em;
+}
+.pullButton {
+  width: 60%;
+  margin: 1em auto;
+  text-align: center;
+}
+.gachaResults {
+  width: 60%;
+  margin: 2em auto;
+  text-align: center;
+}
+.resultsHeader {
+  background-image: -ms-linear-gradient(top, #FD5F00 0%, #983900 90%);
+  background-image: -moz-linear-gradient(top, #FD5F00 0%, #983900 90%);
+  background-image: -o-linear-gradient(top, #FD5F00 0%, #983900 90%);
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #FD5F00), color-stop(90, #983900));
+  background-image: -webkit-linear-gradient(top, #FD5F00 0%, #983900 90%);
+  background-image: linear-gradient(to bottom, #FD5F00 0%, #983900 90%);
+  color: ghostwhite;
+  padding: 0.4em 0;
+}
+.gachaResults .container {
+  text-align: center;
+  margin: 0 auto;
+  min-height: 450px;
+}
+.gachaResults .container .row {
+  text-align: center;
+  margin: 0 auto;
+  padding: 0;
+}
+.gachaResults .container .col-md-3 {
+  margin: 0.5em 4%;
+  max-width: 30% !important;
+  box-shadow: 1px 2px 3px #ccc;
+  background: ghostwhite;
+  padding: 0;
+
+}
+.charHeader {
+  width: 100%;
+  color: white;
+  background-image: -ms-linear-gradient(top, #FD5F00 0%, #983900 90%);
+  background-image: -moz-linear-gradient(top, #FD5F00 0%, #983900 90%);
+  background-image: -o-linear-gradient(top, #FD5F00 0%, #983900 90%);
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #FD5F00), color-stop(90, #983900));
+  background-image: -webkit-linear-gradient(top, #FD5F00 0%, #983900 90%);
+  background-image: linear-gradient(to bottom, #FD5F00 0%, #983900 90%);
+}
+.gachaResults .charImg {
+  width: 70%;
+}
+.stars3 {
+  background: url('../images/starsPng.png');
+  background-position: 0 100%;
+  background-size: 80.567901%;
+  background-repeat: no-repeat;
+  height: 40px;
+}
+.stars4 {
+  background: url('../images/starsPng.png');
+  background-repeat: no-repeat;
+  background-position: 0 47.058824%;
+  background-size: 95.541667%;
+  height: 40px;
+}
+.stars5 {
+  background: url('../images/starsPng.png');
+  background-repeat: no-repeat;
+  background-position: 0 0%;
+  background-size: 100%;
+  height: 40px;
+}
+.charDetails {
+  margin: 0.4em 5px;
+}
+@media only screen and (min-device-width: 320px) and (max-device-width: 1024px) {
+  .gachaResults {
+    width: 80%;
+  }
+  .stars5, .stars4, .stars3 {
+    height: 26px;
+  }
+}

@@ -1,0 +1,235 @@
+{% include "home/_header.html" %}
+{% block content %}
+{% load staticfiles %}
+<div class="mainPage">
+  <div class="objectWrapper">
+
+    <div id='buckName'>
+      <a href="{% url 'project:bienbox' %}"><h6><-- Back</h6></a>
+      <h5>{{ bucketName }}</h5>
+    </div>
+    <h4>total size: {{ convertedSize }}</h4>
+    <input type="hidden" id="totalSize" value="{{ totalSize }}">
+    <hr>
+    <div class="bucketCreateOptions">
+      <ul id="inline-block">
+        <!--This link can create a new folder howerver I do not plan on implementing this yet. Maybe sometime in the future -->
+        <!--<li><button type="button" class="button create" id='newFolder'>New Folder</button></li>-->
+        <li>
+          <form class="uploadForm" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="button" class="btn btn-info" id="upload" value="Choose a file">
+            <input type="file" id="uploadFile">
+            <input type="submit" class="btn btn-primary" id="uploadButton" value="Upload">
+          </form>
+        </li>
+      </ul>
+      <div class="progress">
+        <div id="progressBar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+      </div>
+    </div>
+    <div class="bucketFileList">
+      <ul id="inline-block">
+        <div id="name">
+          <li>Name</li>
+        </div>
+        <div id="rest">
+          <li>Modified</li>
+          <li>Size</li>
+          <li>Options</li>
+        </div>
+        <div class="clear"></div>
+      </ul>
+    </div>
+    <div class="objectsList">
+        <ul>
+          <form method="post" class="createFolder">{% csrf_token %}</form>
+          {% if objects %}
+          {% for object in objects %}
+          <li id='mainLi'>
+            <div class="fileName">{{ object.fileName }}</div>
+            <div id="rest" class="menuu">
+              <ul>
+                <li id='topLevel'>{{ object.modified|date:"d/m/Y" }}</li>
+                <li id='topLevel'>{{ object.fileSize }}</li>
+                <li id='menuIcon'>
+                  <ul class='dropdownMenu'>
+                    <li>
+                      <form class="downloadForm" method="post">
+                        {% csrf_token %}
+                          <h6 id='DownloadButton'>Download</h6>
+                      </form>
+                    </li>
+                    <li>
+                      <form class="deleteForm" method="post">
+                        {% csrf_token %}
+                          <h6 id='DeleteButton'>Delete</h6>
+                      </form>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </li>
+          <div class="clear">
+          </div>
+          {% endfor %}
+      {% else %}
+          <h5>There are no files in this storage yet</h5>
+      {% endif %}
+      </ul>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){
+/*Open a submenu when clicking on menu icon*/
+$('.menuu ul').on('click', function(){
+  var size = $(this).find('#menuIcon ul').toggle();
+});
+/*Trigger file upload on a button click*/
+$('#upload').on('click', function(){
+  $('#uploadFile').trigger('click');
+  $('#uploadButton').show();
+});
+/*Creating a new folder will not be implemeted now*/
+/*Counter for number of new folder fields. Only one field can be displayed at a time*/
+var counter = 0;
+/*Generates a text field to enter the name for a new folder*/
+$('#newFolder').click(function(){
+  var newFolderLine = $('<li><input type="checkbox" class="styled-checkbox"><div id="name"><input type="text" id="folderName" /></div></li>');
+  /*Allow only one folder name field be displayed at a time*/
+  if(counter == 0) {
+    $('.createFolder').append(newFolderLine);
+    counter += 1;
+  } else {
+    alert("Please name the current folder");
+  }
+});
+/*Create a new folder with the information entered earlier.*/
+/*This will not be implemented yet*/
+/*$('.createFolder').on('submit', function(event){
+  event.preventDefault();
+  var folderName = $('#folderName').val();
+  var buckName = $('#buckName').html();
+  $.ajax({
+    url: '{% url 'project:createFolder' %}',
+    type: 'post',
+    data: {
+      'folderName': folderName,
+      'bucketName': buckName,
+      csrfmiddlewaretoken: '{{ csrf_token }}'
+    },
+    dataType: 'json',
+    success: function(data) {
+      alert(data);
+      location.reload();
+    }
+  });
+});*/
+/*###################################################################*/
+/*File size conversion function*/
+function sizeConverter(size, decimals) {
+  if(size == 0) return '0 Bytes';
+  var k = 1024;
+  var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+  var i = Math.floor(Math.log(size) / Math.log(k));
+  var dm = decimals || 2;
+  var i = parseInt(Math.floor(Math.log(size) / Math.log(1024)));
+  return parseFloat((size / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+}
+/*Upload Progress Bar*/
+
+/*###################################################################*/
+/*Upload file*/
+$('.uploadForm').on('submit', function(event){
+  event.preventDefault();
+  var fileSize = $('#uploadFile')[0].files[0].size;
+  var fileName = $('#uploadFile')[0].files[0].name;
+  var realSize = sizeConverter(fileSize, 2);
+  var uploadFile = $('#uploadFile')[0].files[0];
+  var buckName = $('#buckName h5').html();
+  var totalSize = parseFloat($('#totalSize').val());
+  var limit = fileSize + totalSize;
+  var fileData = new FormData();
+  fileData.append('fileSize', realSize);
+  fileData.append('fileName', fileName);
+  fileData.append('file', uploadFile);
+  fileData.append('bucket', buckName);
+  fileData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+  //Check if 4GB limit has been reached or not
+  if(limit > 4294967296) {
+    alert("You have reached the 4GB limit. You can't upload any more files");
+  } else {
+    $('.progress').css('visibility', 'visible');
+    $.ajax({
+      xhr: function(){
+        var xhr = new window.XMLHttpRequest();
+        xhr.upload.addEventListener('progress', function(e){
+            if(e.lengthComputable) {
+              var percent = Math.round((e.loaded / e.total) * 100);
+              $('#progressBar').attr('aria-valuenow', percent).css('width', percent + "%").text(percent + "%");
+            }
+        });
+        return xhr;
+      },
+      url: "{% url 'project:uploadFile' %}",
+      type: 'post',
+      data: fileData,
+      cache: false,
+      processData: false,
+      contentType: false,
+      success: function(data){
+        location.reload();
+      }
+    });
+  }
+});
+/*##############################################################*/
+//Trigger form submission
+$('.objectsList ul #DownloadButton').on('click', function(){
+  $(this).parents('.deleteForm').submit();
+});
+/*Download file*/
+$('.downloadForm').on('click', function(e){
+  e.preventDefault();
+  var buckName = $('#buckName h5').html();
+  var fileName = $(this).parents('#mainLi').find('.fileName').html();
+  var data = {'bucketName': buckName,
+              "fileName": fileName,
+              csrfmiddlewaretoken: '{{ csrf_token }}'}
+    $.ajax({
+    url: "{% url 'project:downloadFile' %}",
+    type: 'post',
+    data: data,
+    dataType: 'json',
+    success: function(data){
+      window.location = data;
+    }
+  });
+});
+/*##############################################################*/
+//Trigger form submission
+$('.objectsList ul #DeleteButton').on('click', function(){
+  $(this).parents('.deleteForm').submit();
+});
+/*Delete file*/
+$('.deleteForm').on('submit', function(e){
+  e.preventDefault();
+  var buckName = $('#buckName h5').html();
+  var fileName = $(this).parents('#mainLi').find('.fileName').html();
+  $.ajax({
+    url: "{% url 'project:deleteFile' %}",
+    type: 'post',
+    data: {'bucketName': buckName,
+           "fileName": fileName,
+           csrfmiddlewaretoken: '{{ csrf_token }}'},
+    dataType: 'json',
+    success: function(data) {
+      location.reload();
+      }
+    });
+  });
+});
+</script>
+{% endblock content %}

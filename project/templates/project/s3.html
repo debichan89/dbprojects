@@ -1,0 +1,116 @@
+{% include "home/_header.html" %}
+{% block content %}
+{% load staticfiles %}
+<div class="mainPage">
+  <div class="s3Wrapper">
+    <h5 style="float: left;"><a href="{% url 'home' %}"><< Back</a></h5>
+    <br>
+    <div class="explanation">
+      <h5 id='clickable'>Click here to see/hide description</h5>
+      <div class="description">
+        <h5>In this project I created a simple storage service in Cloud. Users can
+          upload/download to and delete files from storage drives. I limited the number
+          of drives to three and put a limit of maximum 4GB on each of them.
+          I plan on improving this in the near future to add more functions like
+          creating folders or multiple file upload/download feature.
+        </h5>
+      </div>
+    </div>
+    <div class="descriptionBar">
+      <div id="left">
+        <h4 id='boxName'>Name</h4>
+      </div>
+      <div id="right">
+        <ul id='descExtra'>
+          <li>Created on</li>
+          <li>Space</li>
+          <li>Options</li>
+        </ul>
+      </div>
+    </div>
+    <div class="s3Items">
+      {% for bucket in buckets %}
+      <div class="s3Name">
+        <div id="left">
+          <a href="{% url 'project:bucket' bucket=bucket.bucketName %}"><h4 class='s3ItemName'>{{ bucket.bucketName }}</h4></a>
+        </div>
+        <div id="right">
+          <ul id='s3ItemDesc'>
+            <li>{{ bucket.createdAt|date:"d/m/Y" }}</li>
+              <li>{{ bucket.totalSize }}/4GB</li>
+            <li>
+              <form method="post" class="bucketDeleteForm">
+                {% csrf_token %}
+                <button type="submit" class='btn btn-danger'>Delete</button>
+              </form>
+            </li>
+          </ul>
+        </div>
+    </div>
+    {% endfor %}
+    <form method="post" class="newBucketform">
+       {% csrf_token %}
+    </form>
+  </div>
+  <button class="button create">Create</button>
+  <div id="numberBuckets">
+  </div>
+</div>
+<script type="text/javascript">
+  $('#clickable').on('click', function(){
+    $('.explanation .description').toggle(1000);
+  });
+  var counter = 0; //Counter to check how many buckets have been created. 3 is max.
+  var numBuckets = $('.s3Name').length; //How many buckets are currently created.
+  //Function to create a new input field to name a new bucket
+  $('#numberBuckets').html("<h5>Buckets: " + numBuckets + "/3</h5>");
+  $('.create').on('click', function(){
+    if(numBuckets < 3) {
+      if(counter == 0) {
+        var newBucketInput = $('<input id="newBucketName" type="text"  />');
+        $('.newBucketform').append(newBucketInput);
+        counter += 1;
+      } else {
+        alert("Please name the new bucket");
+      }
+    } else {
+      alert("You can create maximum 3 buckets");
+    }
+  });
+  //A function to create a new bucket
+  $('.newBucketform').on('submit', function(e){
+    e.preventDefault();
+    var newBucketName = $('#newBucketName').val();
+    if(newBucketName == "") {
+      alert("Please enter bucket name");
+    }
+    else
+    {
+      $.ajax({
+        url: "{% url 'project:creates3' %}",
+        type: 'post',
+        data: {'newBucketName': newBucketName, csrfmiddlewaretoken: '{{ csrf_token }}'},
+        dataType: 'json',
+        success: function(data){
+          location.reload();
+        }
+      });
+    }
+  });
+  //Delete a bucket
+  $('.bucketDeleteForm').on('submit', function(e){
+    e.preventDefault();
+    var bucketName = $(this).parents('.s3Name').find('h4').html();
+
+    $.ajax({
+      url: "{% url 'project:deleteBucket' %}",
+      type: 'post',
+      data: {'deleteBucket': bucketName, csrfmiddlewaretoken: '{{ csrf_token }}'},
+      dataType: 'json',
+      success: function(data){
+        location.reload();
+      }
+    });
+  });
+</script>
+{% endblock content %}

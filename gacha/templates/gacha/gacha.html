@@ -1,0 +1,115 @@
+{% include "home/_header.html" %}
+{% block content %}
+{% load staticfiles %}
+<div class="mainPage">
+  <div class="gachaHeader">
+    <h5 style="float: left; padding: 0.3em 0.5em;"><a href="{% url 'home' %}"><< Back</a></h5>
+    <h3>Gacha Simulator</h3>
+  </div>
+  <div class="explanation">
+    <h5 id='clickable'>Click here to see/hide description</h5>
+    <div class="description">
+      <h3>What is a Gacha game?</h3>
+      <h5>Gacha game refer to games that utilize the Gacha mechanism (loot box) to
+        monetise. Most of these games are freemium. In these games, there are usually
+        numerous characters, cards, or other items that players can obtain, and most
+        of them are only obtainable via the "gacha" mechanism. The "gacha" mechanism
+        would allow players to "spin" the gacha using a specific amount of in-game
+        currency, which would give player a randomised character or item. Sometimes,
+         these gacha would be limited, such that those characters and items can only
+         be obtained within a specific event time frame. Because some of these items
+         or characters would be given less chance to appear, typically players would
+         need to spin the gacha many times before they can get the most desired outcome.
+         In these games, gacha could be essential for players to make progress in the game.
+         Players may be given free or discounted gachas, but have to pay to get more.
+         These games may also feature different tiers of gacha pulls, which give different sets of rewards.
+      </h5>
+      <h5>In this simulator I'm recreating the spin mechanism with which the player can
+        obtain characters. I have chosen characters from Final Fantasy games as this
+        is my favourite series. The characters are ranked by the number of stars.
+      </h5>
+      <ul id='explanation'>
+        <li><h5>5 stars is the rarest type and I set a 3%(6% with multi pull) chance of getting such character.</h5></li>
+        <li><h5>4 stars have 15%(20% with multi pull) of being pulled.</h5></li>
+        <li><h5>3 stars characters are the most common and they have 82%(80% with multi pull) of being pulled.</h5></li>
+      </ul>
+      <h5>Below are buttons for either a single character pull or 10 character pull.
+      The probability doesn't change with multi pull(as is often a case in gacha games).
+      Have fun!
+    </h5>
+    </div>
+    <div class="pullButton container">
+      <ul class="row" >
+        <li class="col">
+          <form class="singleForm" method="post">
+            <button type="submit" class="btn btn-primary">Single Pull</button>
+          </form>
+        </li>
+        <li class="col">
+          <form class="multipleForm" method="post">
+            <button type="submit" class="btn btn-success">Multi Pull</button>
+          </form>
+        </li>
+      </ul>
+    </div>
+    <div class="resetButton" style="text-align: center;">
+      <button type="button" class="reset btn btn-danger">Reset</button>
+    </div>
+    <div class="gachaResults">
+      <div class="resultsHeader">
+        <h4>Results</h4>
+      </div>
+      <div class="container">
+        <div class="row">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  $('#clickable').on('click', function(){
+    $('.explanation .description').toggle(1000);
+  });
+function reset(){
+  $('.container .row .col-md-3').remove();
+}
+  $('.singleForm').on('submit', function(e){
+    e.preventDefault();
+    reset();
+      $.ajax({
+      url: "{% url 'gacha:singlePull' %}",
+      type: 'post',
+      data: {'data': true, csrfmiddlewaretoken: '{{ csrf_token }}'},
+      success: function(result) {
+        var stars = result.stars;
+        var link = $('<div class="col-md-3"><div class="charHeader"><h5>' + result.series +
+        '</h5></div><img class="charImg" src="'+ result.image +'" alt="" /><div class="charDetails"><h5>'
+         + result.name + '</h5><h6 class="stars'+ stars +'"></h6></div></div>');
+        $('.gachaResults .container .row').append(link);
+        $('body').scrollTo('.row');
+      }
+    });
+  });
+  $('.multipleForm').on('submit', function(e){
+    e.preventDefault();
+    reset();
+    $.ajax({
+      url: "{% url 'gacha:multiplePull' %}",
+      type: 'post',
+      data: {'data': true, csrfmiddlewaretoken: '{{ csrf_token }}'},
+      success: function(result) {
+            $.each(JSON.parse(result), function(key, value){
+              var stars = value.series;
+              var link = $('<div class="col-md-3"><div class="charHeader"><h5>' + value.series +
+              '</h5></div><img class="charImg" src="'+ value.image +'" alt="" /><div class="charDetails"><h5>'
+               + value.name + '</h5><h6 class="stars'+ value.stars +'"></h6></div></div>');
+              $('.gachaResults .container .row').append(link);
+            });
+      }
+    });
+  });
+  $('.reset').on('click', function(){
+      reset();
+  });
+</script>
+{% endblock content %}

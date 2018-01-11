@@ -1,0 +1,25 @@
+{% include "home/_header.html" %}
+{% block content %}
+{% load staticfiles %}
+<div class="mainPage">
+  <div class="projectsHeader">
+    <h3>Here are some projects I created.</h3>
+  </div>
+  <div class="projectsList">
+    <ul class="row">
+      <li class="col-md-3">
+        <a href="{% url 'project:bienbox' %}">
+          <img src="{% static 'images/cloudStorage.png' %}" alt="">
+          <h4>Simple Cloud Storage</h4>
+        </a>
+      </li>
+      <li class="col-md-3">
+        <a href="{% url 'gacha:gacha' %}">
+          <img src="{% static 'images/mysqlIcon.png' %}" alt="">
+          <h4>Gacha</h4>
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+{% endblock content %}
