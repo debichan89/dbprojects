@@ -82,8 +82,8 @@ DATABASES = {
         'NAME': 'dbproject',
         #Below are MySQL settings
         'USER': 'davidbien',
-        'PASSWORD': 'Suikoden2!',
-        'HOST': 'dbprojectgacha.cntqqqxxjlij.eu-west-1.rds.amazonaws.com',
+        'PASSWORD': '&&&&&&&&',
+        'HOST': '&&&&&&&&&&&&&&&&&',
         'PORT': '3306',
     }
 }
